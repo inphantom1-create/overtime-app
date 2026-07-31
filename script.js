@@ -13,7 +13,7 @@
 /* ──────────────────────────────────────────
    ★ 설정값: 배포 후 여기에 GAS URL을 입력하세요 ★
    ────────────────────────────────────────── */
-const GAS_URL = 'https://script.google.com/macros/s/여기에_배포된_URL_입력/exec';
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbzJ4eXE17QwCFJY9sVj_0jlkqyODkFaXNZDNyJZcbuYVYD77G75xVAw1xHv8eUGMVqZjw/exec';
 
 /* 관리자 비밀번호 (프론트 임시 검증 / GAS 서버 측 이중 검증) */
 const ADMIN_PASSWORD = '1234'; // ← 실제 사용 시 변경 필요
