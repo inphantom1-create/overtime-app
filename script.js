@@ -5,7 +5,7 @@
    ============================================================ */
 
 /* ★ 배포 후 반드시 수정 ★ */
-const GAS_URL = 'https://script.google.com/macros/s/여기에_배포된_URL_입력/exec';
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbzJ4eXE17QwCFJY9sVj_0jlkqyODkFaXNZDNyJZcbuYVYD77G75xVAw1xHv8eUGMVqZjw/exec';
 const ADMIN_PASSWORD = '1234';
 
 /* 기본 근무 시간 (분) */
