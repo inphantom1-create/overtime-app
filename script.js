@@ -283,10 +283,17 @@ async function submitForm() {
     appliedAt: getNowISO(),
   };
   try {
-    await fetch(GAS_URL, {
-      method: 'POST', mode: 'no-cors',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
+    await fetchWithJsonp({
+      action:    'submit',
+      name:      payload.name,
+      job:       payload.job,
+      workDate:  payload.workDate,
+      startTime: payload.startTime,
+      endTime:   payload.endTime,
+      dinner:    payload.dinner,
+      overtime:  payload.overtime,
+      reason:    encodeURIComponent(payload.reason),
+      appliedAt: encodeURIComponent(payload.appliedAt),
     });
     showToast('✅ 신청이 완료되었습니다.', 'success');
     resetForm();
