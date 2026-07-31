@@ -1,0 +1,26 @@
+{
+  "name": "시간외 근무 신청 시스템",
+  "short_name": "시간외근무",
+  "description": "시간외 근무 신청 및 관리 시스템",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#1B6FE8",
+  "theme_color": "#1B6FE8",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "lang": "ko",
+  "dir": "ltr"
+}
