@@ -411,8 +411,11 @@ async function fetchAdminData() {
   document.getElementById('btn-csv').style.display = 'none';
 
   try {
-    const res  = await fetch(`${GAS_URL}?${params.toString()}`);
-    const json = await res.json();
+    const res  = await fetch(`${GAS_URL}?${params.toString()}`, {
+  method: 'GET',
+  mode: 'cors',
+});
+const json = await res.json();
 
     if (json.success && json.data.length > 0) {
       _adminData = json.data;
