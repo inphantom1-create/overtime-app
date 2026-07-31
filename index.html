@@ -2,171 +2,168 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <!-- 모바일 뷰포트 설정 -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <meta name="theme-color" content="#1B6FE8" />
-
   <title>시간외 근무 신청</title>
-
-  <!-- PWA: 홈화면 추가 지원 -->
   <link rel="manifest" href="manifest.json" />
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
   <meta name="apple-mobile-web-app-title" content="시간외근무" />
   <link rel="apple-touch-icon" href="icon-192.png" />
-
-  <!-- 스타일시트 -->
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+<div id="app">
 
-  <!-- ===== 앱 전체 래퍼 ===== -->
-  <div id="app">
-
-    <!-- ===== 헤더 ===== -->
-    <header class="app-header">
-      <div class="header-inner">
-        <div class="header-title">
-          <span class="header-icon">⏱</span>
-          <span>시간외 근무 신청</span>
-        </div>
-        <!-- 관리자 페이지 진입 버튼 -->
-        <button class="btn-admin-entry" onclick="showPage('admin-login')">관리자</button>
+  <!-- ===== 헤더 ===== -->
+  <header class="app-header">
+    <div class="header-inner">
+      <div class="header-title">
+        <span class="header-icon">⏱</span>
+        <span>시간외 근무 신청</span>
       </div>
-    </header>
+      <button class="btn-admin-entry" onclick="showPage('admin-login')">관리자</button>
+    </div>
+  </header>
 
-    <!-- ===== 페이지: 신청서 작성 ===== -->
-    <main id="page-form" class="page active">
-      <div class="container">
+  <!-- ===== 페이지: 신청서 ===== -->
+  <main id="page-form" class="page active">
+    <div class="container">
+      <div class="date-badge" id="today-date"></div>
 
-        <!-- 날짜 표시 -->
-        <div class="date-badge" id="today-date"></div>
+      <!-- 신청인 정보 -->
+      <div class="card">
+        <h2 class="card-title">신청인 정보</h2>
 
-        <!-- 카드: 신청인 정보 -->
-        <div class="card">
-          <h2 class="card-title">신청인 정보</h2>
-
-          <!-- ① 이름 -->
-          <div class="field">
-            <label class="label" for="name">이름 <span class="required">*</span></label>
-            <input class="input" type="text" id="name" placeholder="홍길동" maxlength="20" />
-            <span class="field-error" id="err-name"></span>
-          </div>
-
-          <!-- ② 팀 -->
-          <div class="field">
-            <label class="label" for="team">팀 <span class="required">*</span></label>
-            <select class="input" id="team">
-              <option value="">-- 팀 선택 --</option>
-              <option value="생산1팀">생산1팀</option>
-              <option value="생산2팀">생산2팀</option>
-              <option value="생산3팀">생산3팀</option>
-              <option value="생산4팀">생산4팀</option>
-              <option value="생산5팀">생산5팀</option>
-              <option value="생산지원팀">생산지원팀</option>
-              <option value="품질팀">품질팀</option>
-              <option value="공무팀">공무팀</option>
-              <option value="물류팀">물류팀</option>
-              <option value="기타">기타</option>
-            </select>
-            <span class="field-error" id="err-team"></span>
-          </div>
+        <!-- ① 이름 (드롭다운) -->
+        <div class="field">
+          <label class="label" for="name">이름 <span class="required">*</span></label>
+          <select class="input" id="name">
+            <option value="">-- 이름 선택 --</option>
+          </select>
+          <span class="field-error" id="err-name"></span>
         </div>
 
-        <!-- 카드: 근무 시간 -->
-        <div class="card">
-          <h2 class="card-title">근무 시간</h2>
-
-          <!-- ③ 출근시간 -->
-          <div class="field">
-            <label class="label" for="start-time">출근시간 <span class="required">*</span></label>
-            <input class="input input-time" type="time" id="start-time" value="08:30" />
-            <span class="field-error" id="err-time"></span>
-          </div>
-
-          <!-- ④ 퇴근시간 -->
-          <div class="field">
-            <label class="label" for="end-time">퇴근시간 <span class="required">*</span></label>
-            <input class="input input-time" type="time" id="end-time" value="17:30" />
-          </div>
-
-          <!-- 저녁식사 체크박스 -->
-          <label class="checkbox-row" for="dinner">
-            <input type="checkbox" id="dinner" />
-            <span class="checkbox-custom"></span>
-            <span class="checkbox-label">저녁식사 실시 <span class="checkbox-sub">(18:00 ~ 18:30 차감)</span></span>
-          </label>
-        </div>
-
-        <!-- 카드: 자동 계산 결과 -->
-        <div class="card card-result">
-          <div class="result-row">
-            <span class="result-label">기본 근무</span>
-            <span class="result-value" id="base-hours">08:30 ~ 17:30</span>
-          </div>
-          <div class="result-row">
-            <span class="result-label">점심 차감</span>
-            <span class="result-value deduct">- 1시간 (12:00~13:00)</span>
-          </div>
-          <div class="result-row" id="dinner-row" style="display:none;">
-            <span class="result-label">저녁 차감</span>
-            <span class="result-value deduct">- 30분 (18:00~18:30)</span>
-          </div>
-          <div class="result-divider"></div>
-          <div class="result-row result-total">
-            <span class="result-label">시간외 근무</span>
-            <span class="result-value highlight" id="overtime-display">0시간 0분</span>
-          </div>
-        </div>
-
-        <!-- 카드: 근무 사유 -->
-        <div class="card">
-          <h2 class="card-title">근무 사유</h2>
-
-          <!-- ⑤ 시간외 근무 사유 -->
-          <div class="field">
-            <label class="label" for="reason">사유 <span class="required">*</span></label>
-            <textarea class="input textarea" id="reason" placeholder="시간외 근무 사유를 입력해 주세요." rows="4" maxlength="500"></textarea>
-            <span class="char-count" id="char-count">0 / 500</span>
-            <span class="field-error" id="err-reason"></span>
-          </div>
-        </div>
-
-        <!-- 신청 버튼 -->
-        <button class="btn-submit" id="btn-submit" onclick="submitForm()">
-          <span id="btn-text">신청하기</span>
-          <!-- 로딩 스피너 (평소 숨김) -->
-          <span id="btn-spinner" class="spinner" style="display:none;"></span>
-        </button>
-
-        <!-- 기본 근무 안내 -->
-        <p class="info-text">기본 근무 08:30 ~ 17:30 · 점심 12:00~13:00 자동 제외</p>
-
-      </div>
-    </main>
-
-    <!-- ===== 페이지: 관리자 로그인 ===== -->
-    <main id="page-admin-login" class="page">
-      <div class="container">
-        <div class="card card-center">
-          <div class="admin-icon">🔒</div>
-          <h2 class="card-title center">관리자 로그인</h2>
-          <div class="field">
-            <label class="label" for="admin-pw">비밀번호</label>
-            <input class="input" type="password" id="admin-pw" placeholder="비밀번호 입력"
-              onkeydown="if(event.key==='Enter') adminLogin()" />
-            <span class="field-error" id="err-admin-pw"></span>
-          </div>
-          <button class="btn-submit" onclick="adminLogin()">로그인</button>
-          <button class="btn-back" onclick="showPage('form')">← 신청 화면으로</button>
+        <!-- ② 직무 (드롭다운) -->
+        <div class="field">
+          <label class="label" for="job">직무 <span class="required">*</span></label>
+          <select class="input" id="job">
+            <option value="">-- 직무 선택 --</option>
+            <option value="칭량">칭량</option>
+            <option value="조제">조제</option>
+            <option value="충전">충전</option>
+            <option value="오버랩">오버랩</option>
+            <option value="검사">검사</option>
+            <option value="멸균">멸균</option>
+            <option value="포장">포장</option>
+          </select>
+          <span class="field-error" id="err-job"></span>
         </div>
       </div>
-    </main>
 
-    <!-- ===== 페이지: 관리자 대시보드 ===== -->
-    <main id="page-admin" class="page">
-      <div class="container">
+      <!-- 근무 시간 -->
+      <div class="card">
+        <h2 class="card-title">근무 시간</h2>
+
+        <!-- ③ 근무 날짜 -->
+        <div class="field">
+          <label class="label" for="work-date">근무 날짜 <span class="required">*</span></label>
+          <input class="input" type="date" id="work-date" />
+          <span class="field-error" id="err-date"></span>
+        </div>
+
+        <!-- ④ 출근시간 -->
+        <div class="field">
+          <label class="label" for="start-time">출근시간 <span class="required">*</span></label>
+          <input class="input input-time" type="time" id="start-time" value="08:30" />
+          <span class="field-error" id="err-time"></span>
+        </div>
+
+        <!-- ⑤ 퇴근시간 -->
+        <div class="field">
+          <label class="label" for="end-time">퇴근시간 <span class="required">*</span></label>
+          <input class="input input-time" type="time" id="end-time" value="17:30" />
+        </div>
+
+        <!-- 저녁식사 -->
+        <label class="checkbox-row" for="dinner">
+          <input type="checkbox" id="dinner" />
+          <span class="checkbox-custom"></span>
+          <span class="checkbox-label">저녁식사 실시 <span class="checkbox-sub">(18:00 ~ 18:30 차감)</span></span>
+        </label>
+      </div>
+
+      <!-- 자동 계산 결과 -->
+      <div class="card card-result">
+        <div class="result-row">
+          <span class="result-label">기본 근무</span>
+          <span class="result-value">08:30 ~ 17:30</span>
+        </div>
+        <div class="result-row">
+          <span class="result-label">점심 차감</span>
+          <span class="result-value deduct">- 1시간 (12:00~13:00)</span>
+        </div>
+        <div class="result-row" id="dinner-row" style="display:none;">
+          <span class="result-label">저녁 차감</span>
+          <span class="result-value deduct">- 30분 (18:00~18:30)</span>
+        </div>
+        <div class="result-divider"></div>
+        <div class="result-row result-total">
+          <span class="result-label">시간외 근무</span>
+          <span class="result-value highlight" id="overtime-display">0시간 0분</span>
+        </div>
+      </div>
+
+      <!-- 근무 사유 -->
+      <div class="card">
+        <h2 class="card-title">근무 사유</h2>
+        <div class="field">
+          <label class="label" for="reason">사유 <span class="required">*</span></label>
+          <textarea class="input textarea" id="reason" placeholder="시간외 근무 사유를 입력해 주세요." rows="4" maxlength="500"></textarea>
+          <span class="char-count" id="char-count">0 / 500</span>
+          <span class="field-error" id="err-reason"></span>
+        </div>
+      </div>
+
+      <button class="btn-submit" id="btn-submit" onclick="submitForm()">
+        <span id="btn-text">신청하기</span>
+        <span id="btn-spinner" class="spinner" style="display:none;"></span>
+      </button>
+      <p class="info-text">기본 근무 08:30 ~ 17:30 · 점심 12:00~13:00 자동 제외</p>
+    </div>
+  </main>
+
+  <!-- ===== 페이지: 관리자 로그인 ===== -->
+  <main id="page-admin-login" class="page">
+    <div class="container">
+      <div class="card card-center">
+        <div class="admin-icon">🔒</div>
+        <h2 class="card-title center">관리자 로그인</h2>
+        <div class="field">
+          <label class="label" for="admin-pw">비밀번호</label>
+          <input class="input" type="password" id="admin-pw" placeholder="비밀번호 입력"
+            onkeydown="if(event.key==='Enter') adminLogin()" />
+          <span class="field-error" id="err-admin-pw"></span>
+        </div>
+        <button class="btn-submit" onclick="adminLogin()">로그인</button>
+        <button class="btn-back" onclick="showPage('form')">← 신청 화면으로</button>
+      </div>
+    </div>
+  </main>
+
+  <!-- ===== 페이지: 관리자 대시보드 ===== -->
+  <main id="page-admin" class="page">
+    <div class="container">
+
+      <!-- 탭 메뉴 -->
+      <div class="tab-row">
+        <button class="tab-btn active" id="tab-data" onclick="switchTab('data')">📋 신청 내역</button>
+        <button class="tab-btn" id="tab-member" onclick="switchTab('member')">👤 신청인 관리</button>
+      </div>
+
+      <!-- ── 탭: 신청 내역 ── -->
+      <div id="panel-data">
 
         <!-- 검색 카드 -->
         <div class="card">
@@ -184,22 +181,21 @@
           <div class="field-row">
             <div class="field flex1">
               <label class="label" for="filter-name">이름</label>
-              <input class="input" type="text" id="filter-name" placeholder="홍길동" />
+              <select class="input" id="filter-name">
+                <option value="">전체</option>
+              </select>
             </div>
             <div class="field flex1">
-              <label class="label" for="filter-team">팀</label>
-              <select class="input" id="filter-team">
+              <label class="label" for="filter-job">직무</label>
+              <select class="input" id="filter-job">
                 <option value="">전체</option>
-                <option value="생산1팀">생산1팀</option>
-                <option value="생산2팀">생산2팀</option>
-                <option value="생산3팀">생산3팀</option>
-                <option value="생산4팀">생산4팀</option>
-                <option value="생산5팀">생산5팀</option>
-                <option value="생산지원팀">생산지원팀</option>
-                <option value="품질팀">품질팀</option>
-                <option value="공무팀">공무팀</option>
-                <option value="물류팀">물류팀</option>
-                <option value="기타">기타</option>
+                <option value="칭량">칭량</option>
+                <option value="조제">조제</option>
+                <option value="충전">충전</option>
+                <option value="오버랩">오버랩</option>
+                <option value="검사">검사</option>
+                <option value="멸균">멸균</option>
+                <option value="포장">포장</option>
               </select>
             </div>
           </div>
@@ -216,7 +212,7 @@
           </div>
         </div>
 
-        <!-- CSV 다운로드 버튼 -->
+        <!-- CSV 다운로드 -->
         <button class="btn-csv" id="btn-csv" style="display:none;" onclick="downloadCSV()">
           ⬇ Excel(CSV) 다운로드
         </button>
@@ -227,9 +223,11 @@
             <table class="data-table" id="admin-table">
               <thead>
                 <tr>
+                  <th>삭제</th>
                   <th>신청일시</th>
                   <th>이름</th>
-                  <th>팀</th>
+                  <th>직무</th>
+                  <th>근무날짜</th>
                   <th>출근</th>
                   <th>퇴근</th>
                   <th>저녁</th>
@@ -242,21 +240,49 @@
           </div>
         </div>
 
-        <!-- 데이터 없음 메시지 -->
         <div id="no-data" class="no-data" style="display:none;">조회된 데이터가 없습니다.</div>
-
-        <!-- 로그아웃 -->
-        <button class="btn-back" onclick="adminLogout()">로그아웃</button>
-
       </div>
-    </main>
 
-    <!-- ===== 성공 토스트 메시지 ===== -->
-    <div id="toast" class="toast" style="display:none;"></div>
+      <!-- ── 탭: 신청인 관리 ── -->
+      <div id="panel-member" style="display:none;">
+        <div class="card">
+          <h2 class="card-title">신청인 추가</h2>
+          <div class="field-row">
+            <div class="field flex1">
+              <input class="input" type="text" id="new-member" placeholder="이름 입력" maxlength="10" />
+            </div>
+            <button class="btn-add-member" onclick="addMember()">+ 추가</button>
+          </div>
+          <span class="field-error" id="err-member"></span>
+        </div>
 
-  </div><!-- /#app -->
+        <div class="card">
+          <h2 class="card-title">신청인 목록</h2>
+          <div id="member-list"></div>
+        </div>
+      </div>
 
-  <!-- 자바스크립트 -->
-  <script src="script.js"></script>
+      <button class="btn-back" onclick="adminLogout()">로그아웃</button>
+    </div>
+  </main>
+
+  <!-- 토스트 -->
+  <div id="toast" class="toast" style="display:none;"></div>
+
+  <!-- 삭제 확인 모달 -->
+  <div id="modal-overlay" class="modal-overlay" style="display:none;">
+    <div class="modal-box">
+      <div class="modal-icon">🗑️</div>
+      <div class="modal-title">신청 내역 삭제</div>
+      <div class="modal-desc" id="modal-desc"></div>
+      <div class="modal-btns">
+        <button class="modal-btn-cancel" onclick="closeModal()">취소</button>
+        <button class="modal-btn-confirm" onclick="confirmDelete()">삭제</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+<script src="script.js"></script>
 </body>
 </html>
